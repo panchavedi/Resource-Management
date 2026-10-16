@@ -1,0 +1,33 @@
+# Test profile: schema only (no synthetic seed), deterministic AI, test-only credentials.
+spring:
+  flyway:
+    locations: classpath:db/migration
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+app:
+  ai:
+    mode: SIMULATED
+    ollama:
+      warm-up-on-startup: false
+      read-timeout: 5s
+  security:
+    # Test-only signing key; not used outside the test suite.
+    jwt-secret: test-only-signing-key-0123456789-abcdefghij
+    users:
+      - username: manager
+        display-name: Test Manager
+        password: test-manager-password
+        roles: [RESOURCE_MANAGER]
+      - username: approver
+        display-name: Test Approver
+        password: test-approver-password
+        roles: [APPROVER]
+
+logging:
+  level:
+    com.talent.server: WARN
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR
